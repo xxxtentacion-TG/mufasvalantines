@@ -13,9 +13,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 100%;
+            text-align: center;
             pointer-events: none;
             opacity: 0.5;
             animation: pulse 2s infinite;
+            margin: 0;
+            white-space: nowrap;
+            /* Prevent wrapping unless very small */
         }
 
         @keyframes pulse {

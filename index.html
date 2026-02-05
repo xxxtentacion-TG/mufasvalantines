@@ -10,6 +10,8 @@
 
 <body>
     <div id="bg-particles"></div>
+    <div id="torch-layer"></div>
+    <div id="floating-hearts"></div>
 
     <div class="container mobile-container">
         <div class="hero-box hidden">
@@ -24,13 +26,107 @@
                 </p>
             </div>
 
-            <a href="moments.html" class="btn btn-loading">Begin Our Journey</a>
+            <a href="moments.html" class="btn btn-loading btn-pulse">Begin Our Journey</a>
+
+            <div class="scroll-indicator">
+                <span>Scroll Down</span>
+                <div class="arrow">↓</div>
+            </div>
         </div>
     </div>
 
     <!-- No nav footer on index -->
 
     <script src="script.js"></script>
+    <script>
+        // --- Index Page Exclusive Interactions ---
+
+        // 1. Torch Effect (Mouse Tracking)
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX + 'px';
+            const y = e.clientY + 'px';
+            document.getElementById('torch-layer').style.setProperty('--mouse-x', x);
+            document.getElementById('torch-layer').style.setProperty('--mouse-y', y);
+
+            // Parallax Hearts
+            document.querySelectorAll('.float-3d-heart').forEach(heart => {
+                const speed = heart.getAttribute('data-speed');
+                const xMove = (window.innerWidth - e.clientX * speed) / 100;
+                const yMove = (window.innerHeight - e.clientY * speed) / 100;
+                heart.style.transform = `translate(${xMove}px, ${yMove}px)`;
+            });
+        });
+
+        // 2. Floating 3D Hearts
+        function spawnFloatingHearts() {
+            const container = document.getElementById('floating-hearts');
+            for (let i = 0; i < 15; i++) {
+                const h = document.createElement('div');
+                h.classList.add('float-3d-heart');
+                h.innerText = '❤';
+                h.style.left = Math.random() * 100 + '%';
+                h.style.top = Math.random() * 100 + '%';
+                h.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                h.style.opacity = Math.random() * 0.3 + 0.1;
+                h.setAttribute('data-speed', Math.random() * 5 + 2);
+                container.appendChild(h);
+            }
+        }
+        spawnFloatingHearts();
+
+        // 3. Typewriter Effect for Poem
+        const poemLines = [
+            "In the quiet spaces between seconds...",
+            "in the depth of the night sky...",
+            "my heart finds its rhythm...",
+            "only when it beats next to yours."
+        ];
+
+        function typeWriter() {
+            const container = document.querySelector('.iconic-poem-container'); // Need to create this container in HTML
+            // Actually let's just target the existing p.hero-poem and clear it
+            const poemEl = document.querySelector('.hero-poem');
+            poemEl.innerHTML = ''; // Clear existing
+
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            function typeLine() {
+                if (lineIndex < poemLines.length) {
+                    if (charIndex < poemLines[lineIndex].length) {
+                        poemEl.innerHTML += poemLines[lineIndex].charAt(charIndex);
+                        charIndex++;
+                        setTimeout(typeLine, 50); // Speed
+                    } else {
+                        poemEl.innerHTML += '<br>';
+                        lineIndex++;
+                        charIndex = 0;
+                        setTimeout(typeLine, 400); // Pause between lines
+                    }
+                } else {
+                    // Done - fade in the final line
+                    setTimeout(() => {
+                        poemEl.innerHTML += '<span style="display: block; margin-top: 1rem; color: var(--accent-gold); font-size: 1.3rem; opacity:0; animation: fadeReveal 2s forwards;">You are my infinite.</span>';
+                    }, 500);
+                }
+            }
+            typeLine();
+        }
+
+        // Start after a slight delay
+        setTimeout(typeWriter, 1000);
+
+        // 4. Scroll Indicator Logic
+        window.addEventListener('scroll', () => {
+            const indicator = document.querySelector('.scroll-indicator');
+            if (window.scrollY > 50) {
+                indicator.classList.add('hidden');
+            } else {
+                indicator.classList.remove('hidden');
+            }
+        });
+
+    </script>
 </body>
 
 </html>

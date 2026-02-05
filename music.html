@@ -229,6 +229,35 @@
             margin-top: 20px;
         }
 
+        /* Mute Button on Card */
+        .mute-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            /* Above overlay */
+            font-size: 1rem;
+            backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+
+        .mute-btn:hover {
+            background: rgba(197, 160, 89, 0.2);
+            border-color: var(--accent-gold);
+            transform: scale(1.1);
+            color: var(--accent-gold);
+        }
+
         /* Sticky Nav Container remains locally if needed or can be moved, 
            but removing continue-btn styles as they are now global */
 
@@ -237,73 +266,64 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--accent-gold);
+            padding: 12px 16px;
             border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 99;
-            backdrop-filter: blur(5px);
-            transition: opacity 0.3s ease;
+            gap: 15px;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
         }
 
         .volume-slider {
             width: 0;
             overflow: hidden;
-            transition: width 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             appearance: none;
             background: transparent;
+            opacity: 0;
         }
 
-        .volume-control-fixed:hover .volume-slider {
-            width: 80px;
+        .volume-control-fixed:hover .volume-slider,
+        .volume-control-fixed.active .volume-slider {
+            /* Added active state support */
+            width: 100px;
+            /* Wider for better control */
+            opacity: 1;
         }
 
         .volume-icon {
-            color: #fff;
+            color: var(--accent-gold);
             cursor: pointer;
             width: 24px;
             text-align: center;
-        }
-
-        /* Custom Range Slider */
-        input[type=range] {
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            background: var(--accent-gold);
-            cursor: pointer;
-            margin-top: -5px;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+            user-select: none;
         }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .song-grid {
                 grid-template-columns: 1fr;
-                /* Vertical stack */
                 gap: 20px;
             }
 
             .volume-control-fixed {
-                bottom: 100px;
-                /* Above continue button */
+                bottom: 120px;
+                /* Clear standard buttons */
                 right: 20px;
-                padding: 8px;
+                padding: 10px 14px;
+            }
+
+            /* On mobile, maybe always show slider or keep it compact */
+            .volume-control-fixed .volume-slider {
+                width: 80px;
+                opacity: 1;
+                /* Always visible on mobile for usability */
             }
         }
     </style>
@@ -326,6 +346,7 @@
 
             <!-- Song 1 -->
             <div class="song-card" onclick="playSong(this, 'song1')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <!-- Replace src with your memory image -->
                     <img src="assets/images/music1.jpg"
@@ -357,6 +378,7 @@
 
             <!-- Song 2 -->
             <div class="song-card" onclick="playSong(this, 'song2')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="assets/images/music2.jpg"
                         onerror="this.src='https://i.scdn.co/image/ab67616d0000b27371d62ea7ea8a5be92d3c1f62'"
@@ -384,6 +406,7 @@
 
             <!-- Song 3 -->
             <div class="song-card" onclick="playSong(this, 'song3')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="assets/images/music3.jpg"
                         onerror="this.src='https://images.genius.com/fdff64f3163b29d924df2d5edf49608b.1000x1000x1.png'"
@@ -411,6 +434,7 @@
 
             <!-- Song 4 -->
             <div class="song-card" onclick="playSong(this, 'song4')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvoiDOVezAIwAEsGjB-STmqR96F__ENaTu_Q&s"
                         onerror="this.src='https://a10.gaanacdn.com/gn_img/song/zLp36PvbrG/p36xj5y0br/size_m_1750855409.webp'"
@@ -438,6 +462,7 @@
 
             <!-- Song 5 -->
             <div class="song-card" onclick="playSong(this, 'song5')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://c.saavncdn.com/403/Idhuvum-Kadandhu-Pogum-The-Healing-Song-From-Netrikann--Tamil-2021-20210608215723-500x500.jpg"
                         onerror="this.src='https://c.saavncdn.com/403/Idhuvum-Kadandhu-Pogum-The-Healing-Song-From-Netrikann--Tamil-2021-20210608215723-500x500.jpg'"
@@ -465,6 +490,7 @@
 
             <!-- Song 6 -->
             <div class="song-card" onclick="playSong(this, 'song6')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlJZHQfivZ2st-4KtrAR1-drWi1zOrJWlK9w&s"
                         onerror="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlJZHQfivZ2st-4KtrAR1-drWi1zOrJWlK9w&s'"
@@ -492,6 +518,7 @@
 
             <!-- Song 7 -->
             <div class="song-card" onclick="playSong(this, 'song7')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://i.scdn.co/image/ab67616d0000b2738352ba18a72a0ebd8cab2e5f"
                         onerror="this.src='https://i.scdn.co/image/ab67616d0000b2738352ba18a72a0ebd8cab2e5f'"
@@ -519,6 +546,7 @@
 
             <!-- Song 8 -->
             <div class="song-card" onclick="playSong(this, 'song8')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://i.scdn.co/image/ab67616d00001e02c027ad28821777b00dcaa888"
                         onerror="this.src='https://i.scdn.co/image/ab67616d00001e02c027ad28821777b00dcaa888'"
@@ -546,6 +574,7 @@
 
             <!-- Song 9 -->
             <div class="song-card" onclick="playSong(this, 'song9')">
+                <div class="mute-btn" onclick="toggleMute(event, this)">🔊</div>
                 <div class="song-cover-wrapper">
                     <img src="https://i.scdn.co/image/ab67616d00001e020215c2097cd2761cb1639d3e"
                         onerror="this.src='https://i.scdn.co/image/ab67616d00001e020215c2097cd2761cb1639d3e'"
@@ -579,13 +608,6 @@
         <a href="reasons.html" class="continue-btn">
             Continue our story <span>→</span>
         </a>
-    </div>
-
-    <!-- Volume Control -->
-    <div class="volume-control-fixed">
-        <div class="volume-icon" onclick="toggleMute()">🔊</div>
-        <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.8"
-            oninput="setVolume(this.value)">
     </div>
 
     <footer class="nav-footer">
@@ -685,12 +707,48 @@
         }
 
         // Volume
+        let lastVolume = 0.8;
+
         function setVolume(v) {
             if (currentAudio) currentAudio.volume = v;
+            updateVolumeUI(v);
         }
 
         function toggleMute() {
-            if (currentAudio) currentAudio.muted = !currentAudio.muted;
+            const icon = document.querySelector('.volume-icon');
+            const slider = document.querySelector('.volume-slider');
+
+            if (currentAudio && currentAudio.muted) {
+                // Unmute
+                currentAudio.muted = false;
+                currentAudio.volume = lastVolume;
+                slider.value = lastVolume;
+                updateVolumeUI(lastVolume);
+            } else {
+                // Mute
+                if (currentAudio) {
+                    lastVolume = currentAudio.volume; // Save previous volume
+                    currentAudio.muted = true;
+                    // Don't change actual volume property if just muting via property, 
+                    // but visual slider often goes to 0 for clarity.
+                    // Let's keep slider at level but show mute icon? 
+                    // Or set volume to 0? Let's go with setting volume to 0 for clear "off"
+                    currentAudio.volume = 0;
+                }
+                slider.value = 0;
+                updateVolumeUI(0);
+            }
+        }
+
+        function updateVolumeUI(v) {
+            const icon = document.querySelector('.volume-icon');
+            if (v == 0) {
+                icon.innerText = '🔇';
+                icon.style.opacity = '0.5';
+            } else {
+                icon.innerText = '🔊';
+                icon.style.opacity = '1';
+            }
         }
 
         // Reset when ended

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('.song-grid')) initMusicPlayer();
     if (document.querySelector('.pop-area')) initPopEffects();
     if (document.querySelector('#heartbeat')) initSurprise();
+    if (document.querySelector('.reason-card')) initTiltEffect(); // New generic tilt
 });
 
 /* --- Global Particles --- */
@@ -52,19 +53,62 @@ function animateOnScroll() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                entry.target.classList.remove('hidden');
+                // Add tiny random delay for organic feel
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                    entry.target.classList.remove('hidden');
+                }, Math.random() * 200);
 
-                // Specific logic for reasons list items
                 if (entry.target.classList.contains('reason-card')) {
                     entry.target.classList.add('revealed');
                 }
+
+                // Stop observing once revealed
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
 
-    // Observe all hidden elements and specific cards
     document.querySelectorAll('.hidden, .reason-card').forEach(el => observer.observe(el));
+}
+
+/* --- Premium 3D Tilt Effect --- */
+function initTiltEffect() {
+    const cards = document.querySelectorAll('.reason-card');
+
+    cards.forEach(card => {
+        // Add glare element if not present
+        if (!card.querySelector('.card-glare')) {
+            const glare = document.createElement('div');
+            glare.classList.add('card-glare');
+            card.appendChild(glare);
+        }
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Calculate rotation (max 15deg)
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -10; // Invert axis for nature feel
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            // Apply Transform
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+            // Update Glare Position via CSS Vars
+            card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+            card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            // Reset
+            card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+        });
+    });
 }
 
 /* --- Moments: Shuffle --- */

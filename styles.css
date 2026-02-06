@@ -828,20 +828,42 @@ p {
     position: absolute;
     transform: translate(-50%, -50%) rotate(var(--rnd-rot));
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem;
-    /* Larger for impact */
+    font-size: 1.5rem;
+    /* Reduced from 2.5rem */
     font-style: italic;
     color: var(--accent-gold);
-    text-shadow: 0 0 20px rgba(197, 160, 89, 0.6), 0 2px 4px rgba(0, 0, 0, 0.8);
-    /* Glow + Legibility */
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.4);
     pointer-events: none;
     white-space: nowrap;
     z-index: 100;
     padding: 0;
-    /* No container padding */
     background: transparent;
     border: none;
     animation: premiumFloat 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Reason Card Click Animation */
+.reason-card.clicked {
+    animation: cardPulse 0.6s ease-out forwards;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
+    opacity: 1 !important;
+    /* Force visible */
+    transform: translateY(0) scale(1.02) !important;
+}
+
+@keyframes cardPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 @keyframes premiumFloat {

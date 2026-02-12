@@ -173,7 +173,7 @@ function initShuffle() {
 /* --- Moments: Countdown --- */
 function initCountdown() {
     // START DATE: April 4, 2023
-    const startDate = new Date('2023-04-04T00:00:00');
+    const startDate = new Date('2023-06-01T00:00:00');
 
     function updateTimer() {
         const now = new Date();
